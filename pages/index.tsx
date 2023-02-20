@@ -1,7 +1,25 @@
 import Head from 'next/head'
 import styled from 'styled-components'
+import { useEffect, useState } from 'react'
+import gameApi from '../src/api/game'
+import { videoGame } from '@/src/types/video-game'
 
 export default function Home() {
+  const [game, setGame] = useState<videoGame>({
+    name: '',
+    background_image: '',
+  })
+  useEffect(() => {
+    const getGame = async () => {
+      const gameResponse = await gameApi.getGame('left-4-dead')
+      console.log(gameResponse)
+      if (gameResponse !== undefined) {
+        setGame(gameResponse.data)
+      }
+    }
+    getGame()
+  }, [])
+
   return (
     <>
       <Head>
@@ -11,6 +29,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Main>The main text</Main>
+      <GameTile>
+        {game.name}
+        <img src={game.background_image} />
+      </GameTile>
     </>
   )
 }
@@ -21,4 +43,15 @@ const Main = styled.main`
   justify-content: space-between;
   align-items: center;
   padding: 6rem;
+`
+
+const GameTile = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  text-align: center;
+
+  img {
+    width: 100%;
+  }
 `
