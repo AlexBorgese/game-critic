@@ -3,18 +3,17 @@ import styled from 'styled-components'
 import { useEffect, useState } from 'react'
 import gameApi from '../src/api/game'
 import { videoGame } from '@/src/types/video-game'
+import Tile from '@/src/components/Tile/tile'
 
 export default function Home() {
-  const [game, setGame] = useState<videoGame>({
-    name: '',
-    background_image: '',
-  })
+  const [games, setGames] = useState<videoGame[]>([])
+
   useEffect(() => {
     const getGame = async () => {
-      const gameResponse = await gameApi.getGame('left-4-dead')
-      console.log(gameResponse)
-      if (gameResponse !== undefined) {
-        setGame(gameResponse.data)
+      const gamesResponse = await gameApi.getPopular()
+      console.log(gamesResponse)
+      if (gamesResponse !== undefined) {
+        setGames(gamesResponse)
       }
     }
     getGame()
@@ -28,11 +27,18 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Main>The main text</Main>
-      <GameTile>
-        {game.name}
-        <img src={game.background_image} />
-      </GameTile>
+      <Main>
+        <h1>Game Critic</h1>
+        <TileWrapper>
+          {games.map((game) => (
+            <Tile
+              name={game.name}
+              background_image={game.background_image}
+              description_raw={game.description_raw}
+            />
+          ))}
+        </TileWrapper>
+      </Main>
     </>
   )
 }
@@ -45,13 +51,9 @@ const Main = styled.main`
   padding: 6rem;
 `
 
-const GameTile = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 200px;
-  text-align: center;
-
-  img {
-    width: 100%;
-  }
+const TileWrapper = styled.div`
+  overflow-y: none;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(5, 1fr);
 `
