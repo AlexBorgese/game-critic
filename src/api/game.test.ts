@@ -11,6 +11,6 @@ describe('Given the game api is called with a game', () => {
     )
     const response = await game.getGame('fallout')
 
-    expect(response?.data.name).toBe('fallout')
+    expect(response?.name).toBe('fallout')
   })
 })

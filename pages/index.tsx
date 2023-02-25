@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react'
 import gameApi from '../src/api/game'
 import { videoGame } from '@/src/types/video-game'
 import Tile from '@/src/components/Tile/tile'
+import SearchBar from '@/src/components/SearchBar/searchBar'
 
 export default function Home() {
   const [games, setGames] = useState<videoGame[]>([])
+  const [searchedGame, setSearchedGame] = useState<videoGame>()
 
   useEffect(() => {
     const getGame = async () => {
@@ -19,6 +21,13 @@ export default function Home() {
     getGame()
   }, [])
 
+  const searchForGame = async (game: string) => {
+    const getGame = await gameApi.getGame(game)
+
+    setSearchedGame(getGame)
+    console.log(searchedGame)
+  }
+
   return (
     <>
       <Head>
@@ -29,6 +38,16 @@ export default function Home() {
       </Head>
       <Main>
         <h1>Game Critic</h1>
+        <SearchBar onEnter={searchForGame} />
+        {searchedGame?.name !== undefined && (
+          <Tile
+            name={searchedGame.name}
+            background_image={searchedGame.background_image}
+            description_raw={searchedGame.description_raw}
+          />
+        )}
+        <Line />
+        <h2>The Latest Games</h2>
         <TileWrapper>
           {games.map((game) => (
             <Tile
@@ -49,6 +68,12 @@ const Main = styled.main`
   justify-content: space-between;
   align-items: center;
   padding: 6rem;
+`
+
+const Line = styled.span`
+  width: 100%;
+  margin: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 `
 
 const TileWrapper = styled.div`
