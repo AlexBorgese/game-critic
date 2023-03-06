@@ -2,12 +2,19 @@ import React from 'react'
 import { videoGame } from '@/src/types/video-game'
 import styled from 'styled-components'
 
-const Tile = ({ name, background_image, description_raw }: videoGame) => (
-  <GameTile>
-    <h2>{name}</h2>
-    <p>{description_raw}</p>
-    <img src={background_image} alt={name} />
-  </GameTile>
+const Tile = ({
+  name,
+  background_image,
+  description_raw,
+  onClick,
+}: videoGame & { onClick: () => void }) => (
+  <a onClick={onClick}>
+    <GameTile>
+      <h2>{name}</h2>
+      <p>{description_raw}</p>
+      <img src={background_image} alt={name} />
+    </GameTile>
+  </a>
 )
 
 const GameTile = styled.div`

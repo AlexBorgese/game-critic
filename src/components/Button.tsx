@@ -1,6 +1,7 @@
 interface props {
   onClick: () => void
-  value: string
+  value?: string
+  children: JSX.Element | JSX.Element[]
 }
 
 const Button = ({ onClick, value }: props) => (

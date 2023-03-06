@@ -5,15 +5,16 @@ import gameApi from '../src/api/game'
 import { videoGame } from '@/src/types/video-game'
 import Tile from '@/src/components/Tile/tile'
 import SearchBar from '@/src/components/SearchBar/searchBar'
+import GameView from '@/src/components/GameView/gameView'
 
 export default function Home() {
   const [games, setGames] = useState<videoGame[]>([])
   const [searchedGame, setSearchedGame] = useState<videoGame>()
+  const [openModal, setOpenModal] = useState(false)
 
   useEffect(() => {
     const getGame = async () => {
       const gamesResponse = await gameApi.getPopular()
-      console.log(gamesResponse)
       if (gamesResponse !== undefined) {
         setGames(gamesResponse)
       }
@@ -39,11 +40,13 @@ export default function Home() {
       <Main>
         <h1>Game Critic</h1>
         <SearchBar onEnter={searchForGame} />
+        {openModal && <GameView openModal={setOpenModal} />}
         {searchedGame?.name !== undefined && (
           <Tile
             name={searchedGame.name}
             background_image={searchedGame.background_image}
             description_raw={searchedGame.description_raw}
+            onClick={() => setOpenModal(true)}
           />
         )}
         <Line />
@@ -51,6 +54,7 @@ export default function Home() {
         <TileWrapper>
           {games.map((game) => (
             <Tile
+              onClick={() => setOpenModal(true)}
               name={game.name}
               background_image={game.background_image}
               description_raw={game.description_raw}

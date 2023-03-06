@@ -15,6 +15,7 @@ const game = {
           },
         }
       )
+
       return response.data.results[0]
     } catch (e) {
       console.log(e)
