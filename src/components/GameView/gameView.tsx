@@ -1,18 +1,28 @@
+import { videoGame } from '@/src/types/video-game'
 import React from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 
 const GameView = ({
-  openModal,
+  onClick,
+  selectedGame,
 }: {
-  openModal: (shouldOpen: boolean) => void
+  onClick: () => void
+  selectedGame: videoGame
 }) => {
   return (
     <>
       {createPortal(
         <>
-          <Modal onClick={() => openModal(false)}>
-            <Content></Content>
+          <Modal onClick={onClick}>
+            <Content>
+              <h1>{selectedGame.name}</h1>
+              <img
+                src={selectedGame.background_image}
+                alt={selectedGame.name}
+              />
+              <p>{selectedGame.description_raw}</p>
+            </Content>
           </Modal>
         </>,
         document.body

@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { useEffect, useState } from 'react'
 import gameApi from '../src/api/game'
@@ -6,27 +7,36 @@ import { videoGame } from '@/src/types/video-game'
 import Tile from '@/src/components/Tile/tile'
 import SearchBar from '@/src/components/SearchBar/searchBar'
 import GameView from '@/src/components/GameView/gameView'
+import { SET_GAMES, TOGGLE_GAME_MODAL } from '@/src/constants/gameConstants'
 
-export default function Home() {
-  const [games, setGames] = useState<videoGame[]>([])
+export const Home = ({
+  dispatch,
+  games,
+  openGameModal,
+  selectedGame,
+}: {
+  games: Array<videoGame>
+  openGameModal: boolean
+  selectedGame: videoGame
+}) => {
   const [searchedGame, setSearchedGame] = useState<videoGame>()
-  const [openModal, setOpenModal] = useState(false)
 
   useEffect(() => {
     const getGame = async () => {
       const gamesResponse = await gameApi.getPopular()
       if (gamesResponse !== undefined) {
-        setGames(gamesResponse)
+        // could use a thunk here?
+        dispatch({ type: SET_GAMES, payload: gamesResponse })
       }
     }
     getGame()
   }, [])
 
   const searchForGame = async (game: string) => {
+    // TODO make this an action
     const getGame = await gameApi.getGame(game)
 
     setSearchedGame(getGame)
-    console.log(searchedGame)
   }
 
   return (
@@ -40,13 +50,22 @@ export default function Home() {
       <Main>
         <h1>Game Critic</h1>
         <SearchBar onEnter={searchForGame} />
-        {openModal && <GameView openModal={setOpenModal} />}
+        {openGameModal && (
+          <GameView
+            selectedGame={selectedGame}
+            onClick={() =>
+              dispatch({ type: TOGGLE_GAME_MODAL, payload: false })
+            }
+          />
+        )}
         {searchedGame?.name !== undefined && (
           <Tile
             name={searchedGame.name}
             background_image={searchedGame.background_image}
             description_raw={searchedGame.description_raw}
-            onClick={() => setOpenModal(true)}
+            onClick={() =>
+              dispatch({ type: TOGGLE_GAME_MODAL, payload: false })
+            }
           />
         )}
         <Line />
@@ -54,7 +73,12 @@ export default function Home() {
         <TileWrapper>
           {games.map((game) => (
             <Tile
-              onClick={() => setOpenModal(true)}
+              onClick={() =>
+                dispatch({
+                  type: TOGGLE_GAME_MODAL,
+                  payload: { open: true, selectedGame: game },
+                })
+              }
               name={game.name}
               background_image={game.background_image}
               description_raw={game.description_raw}
@@ -65,6 +89,25 @@ export default function Home() {
     </>
   )
 }
+
+const mapStateToProps = function ({
+  gameReducer,
+}: {
+  gameReducer: {
+    // TODO move to type of reducer
+    games: Array<videoGame>
+    openGameModal: boolean
+    selectedGame: videoGame
+  }
+}) {
+  return {
+    games: gameReducer.games,
+    openGameModal: gameReducer.openGameModal,
+    selectedGame: gameReducer.selectedGame,
+  }
+}
+
+export default connect(mapStateToProps)(Home)
 
 const Main = styled.main`
   display: flex;
