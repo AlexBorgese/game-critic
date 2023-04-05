@@ -1,23 +1,23 @@
 import React from 'react'
+import Image from 'next/image'
 import { videoGame } from '@/src/types/video-game'
 import styled from 'styled-components'
 
 const Tile = ({
   name,
   background_image,
-  description_raw,
   onClick,
 }: videoGame & { onClick: () => void }) => (
   <a onClick={onClick}>
     <GameTile>
-      <h2>{name}</h2>
-      <p>{description_raw}</p>
-      <img src={background_image} alt={name} />
+      <TileHeader>{name}</TileHeader>
+      <Image src={background_image} alt={name} fill loading="eager" />
     </GameTile>
   </a>
 )
 
 const GameTile = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 256px;
@@ -46,6 +46,14 @@ const GameTile = styled.div`
     overflow: hidden;
     object-fit: cover;
   }
+`
+
+const TileHeader = styled.h2`
+  z-index: 1;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+  margin: 0;
+  padding: 16px;
+  color: white;
 `
 
 export default Tile

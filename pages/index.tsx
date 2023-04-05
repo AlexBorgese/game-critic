@@ -1,13 +1,14 @@
 import Head from 'next/head'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import gameApi from '../src/api/game'
 import { videoGame } from '@/src/types/video-game'
 import Tile from '@/src/components/Tile/tile'
 import SearchBar from '@/src/components/SearchBar/searchBar'
 import GameView from '@/src/components/GameView/gameView'
 import { SET_GAMES, TOGGLE_GAME_MODAL } from '@/src/constants/gameConstants'
+import LoadingSpinner from '@/src/components/Spinner/Spinner'
 
 export const Home = ({
   dispatch,
@@ -52,7 +53,7 @@ export const Home = ({
         <SearchBar onEnter={searchForGame} />
         {openGameModal && (
           <GameView
-            selectedGame={selectedGame}
+            selectedGame={selectedGame.slug}
             onClick={() =>
               dispatch({ type: TOGGLE_GAME_MODAL, payload: false })
             }
