@@ -1,14 +1,14 @@
 import Head from 'next/head'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { Suspense, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import gameApi from '../src/api/game'
 import { videoGame } from '@/src/types/video-game'
 import Tile from '@/src/components/Tile/tile'
 import SearchBar from '@/src/components/SearchBar/searchBar'
 import GameView from '@/src/components/GameView/gameView'
 import { SET_GAMES, TOGGLE_GAME_MODAL } from '@/src/constants/gameConstants'
-import LoadingSpinner from '@/src/components/Spinner/Spinner'
+// import LoadingSpinner from '@/src/components/Spinner/Spinner'
 
 export const Home = ({
   dispatch,
@@ -64,6 +64,7 @@ export const Home = ({
             name={searchedGame.name}
             background_image={searchedGame.background_image}
             description_raw={searchedGame.description_raw}
+            slug={searchedGame.slug}
             onClick={() =>
               dispatch({ type: TOGGLE_GAME_MODAL, payload: false })
             }
@@ -80,8 +81,11 @@ export const Home = ({
                   payload: { open: true, selectedGame: game },
                 })
               }
+              slug={game.slug}
               name={game.name}
-              background_image={game.background_image}
+              background_image={
+                game.background_image !== null ? game.background_image : ''
+              }
               description_raw={game.description_raw}
             />
           ))}
