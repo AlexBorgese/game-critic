@@ -11,7 +11,7 @@ const Tile = ({
   <a onClick={onClick}>
     <GameTile>
       <TileHeader>{name}</TileHeader>
-      <Image src={background_image} alt={name} fill loading="eager" />
+      <Image src={background_image} alt={name} fill priority />
     </GameTile>
   </a>
 )
@@ -40,8 +40,6 @@ const GameTile = styled.div`
   }
 
   img {
-    border-bottom-right-radius: 5%;
-    border-bottom-left-radius: 5%;
     height: 100%;
     overflow: hidden;
     object-fit: cover;

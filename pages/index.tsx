@@ -20,7 +20,7 @@ export const Home = ({
   openGameModal: boolean
   selectedGame: videoGame
 }) => {
-  const [searchedGame, setSearchedGame] = useState<videoGame>()
+  const [searchedGame, setSearchedGame] = useState<Array<videoGame>>([])
 
   useEffect(() => {
     const getGame = async () => {
@@ -34,12 +34,16 @@ export const Home = ({
   }, [])
 
   const searchForGame = async (game: string) => {
+    if (game.length === 0) {
+      setSearchedGame([])
+      return
+    }
     // TODO make this an action
     const getGame = await gameApi.getGame(game)
 
     setSearchedGame(getGame)
   }
-
+  console.log(searchedGame?.length !== 0)
   return (
     <>
       <Head>
@@ -59,37 +63,50 @@ export const Home = ({
             }
           />
         )}
-        {searchedGame?.name !== undefined && (
-          <Tile
-            name={searchedGame.name}
-            background_image={searchedGame.background_image}
-            description_raw={searchedGame.description_raw}
-            slug={searchedGame.slug}
-            onClick={() =>
-              dispatch({ type: TOGGLE_GAME_MODAL, payload: false })
-            }
-          />
+        {searchedGame?.length !== 0 ? (
+          <TileWrapper>
+            {searchedGame?.map((gameResult) => (
+              <Tile
+                name={gameResult.name}
+                background_image={
+                  gameResult.background_image !== null
+                    ? gameResult.background_image
+                    : ''
+                }
+                description_raw={gameResult.description_raw}
+                slug={gameResult.slug}
+                onClick={() =>
+                  dispatch({
+                    type: TOGGLE_GAME_MODAL,
+                    payload: { open: true, selectedGame: gameResult },
+                  })
+                }
+              />
+            ))}
+          </TileWrapper>
+        ) : (
+          <>
+            <h2>The Latest Games</h2>
+            <TileWrapper>
+              {games.map((game) => (
+                <Tile
+                  onClick={() =>
+                    dispatch({
+                      type: TOGGLE_GAME_MODAL,
+                      payload: { open: true, selectedGame: game },
+                    })
+                  }
+                  slug={game.slug}
+                  name={game.name}
+                  background_image={
+                    game.background_image !== null ? game.background_image : ''
+                  }
+                  description_raw={game.description_raw}
+                />
+              ))}
+            </TileWrapper>
+          </>
         )}
-        <Line />
-        <h2>The Latest Games</h2>
-        <TileWrapper>
-          {games.map((game) => (
-            <Tile
-              onClick={() =>
-                dispatch({
-                  type: TOGGLE_GAME_MODAL,
-                  payload: { open: true, selectedGame: game },
-                })
-              }
-              slug={game.slug}
-              name={game.name}
-              background_image={
-                game.background_image !== null ? game.background_image : ''
-              }
-              description_raw={game.description_raw}
-            />
-          ))}
-        </TileWrapper>
       </Main>
     </>
   )
