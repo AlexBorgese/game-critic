@@ -8,6 +8,8 @@ import Tile from '@/src/components/Tile/tile'
 import SearchBar from '@/src/components/SearchBar/searchBar'
 import GameView from '@/src/components/GameView/gameView'
 import { SET_GAMES, TOGGLE_GAME_MODAL } from '@/src/constants/gameConstants'
+import { SET_BEARER } from '@/src/constants/authConstants'
+import authApi from '@/src/api/authApi'
 // import LoadingSpinner from '@/src/components/Spinner/Spinner'
 
 export const Home = ({
@@ -15,20 +17,31 @@ export const Home = ({
   games,
   openGameModal,
   selectedGame,
+  bearerToken,
 }: {
   games: Array<videoGame>
   openGameModal: boolean
   selectedGame: videoGame
+  bearerToken: string
 }) => {
   const [searchedGame, setSearchedGame] = useState<Array<videoGame>>([])
 
   useEffect(() => {
+    let gamesResponse: Array<{}>
     const getGame = async () => {
-      const gamesResponse = await gameApi.getPopular()
-      if (gamesResponse !== undefined) {
-        // could use a thunk here?
-        dispatch({ type: SET_GAMES, payload: gamesResponse })
-      }
+      authApi.authenticate().then((response) => {
+        dispatch({
+          type: SET_BEARER,
+          payload: response.data,
+        })
+        gameApi.getPopular(response.data).then((gamesResponse) => {
+          console.log(gamesResponse)
+          if (gamesResponse.data !== undefined) {
+            // could use a thunk here?
+            dispatch({ type: SET_GAMES, payload: gamesResponse.data })
+          }
+        })
+      })
     }
     getGame()
   }, [])
@@ -39,11 +52,11 @@ export const Home = ({
       return
     }
     // TODO make this an action
-    const getGame = await gameApi.getGame(game)
+    const getGame = await gameApi.getGame(bearerToken, game)
 
     setSearchedGame(getGame)
   }
-  console.log(searchedGame?.length !== 0)
+  console.log(bearerToken)
   return (
     <>
       <Head>
@@ -57,6 +70,7 @@ export const Home = ({
         <SearchBar onEnter={searchForGame} />
         {openGameModal && (
           <GameView
+            bearerToken={bearerToken}
             selectedGame={selectedGame.slug}
             onClick={() =>
               dispatch({ type: TOGGLE_GAME_MODAL, payload: false })
@@ -114,6 +128,7 @@ export const Home = ({
 
 const mapStateToProps = function ({
   gameReducer,
+  authReducer,
 }: {
   gameReducer: {
     // TODO move to type of reducer
@@ -121,11 +136,15 @@ const mapStateToProps = function ({
     openGameModal: boolean
     selectedGame: videoGame
   }
+  authReducer: {
+    bearerToken: string
+  }
 }) {
   return {
     games: gameReducer.games,
     openGameModal: gameReducer.openGameModal,
     selectedGame: gameReducer.selectedGame,
+    bearerToken: authReducer.bearerToken,
   }
 }
 
@@ -137,12 +156,6 @@ const Main = styled.main`
   justify-content: space-between;
   align-items: center;
   padding: 6rem;
-`
-
-const Line = styled.span`
-  width: 100%;
-  margin: 16px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 `
 
 const TileWrapper = styled.div`

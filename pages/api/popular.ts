@@ -1,22 +1,23 @@
 import axios from 'axios'
-import moment from 'moment'
+import type { NextApiRequest, NextApiResponse } from 'next'
 
-export default async function handler(req, res) {
-  const date = moment()
-  const dateNow = date.format('YYYY/MM/DD').replaceAll('/', '-')
-  const dateMonthAgo = moment()
-    // day is month for some reason
-    .subtract('1', 'month')
-    .format('YYYY/MM/DD')
-    .replaceAll('/', '-')
-  const response = await axios.get(
-    `https://api.rawg.io/api/games?dates=${dateMonthAgo},${dateNow}&platforms=18,1,7&&ordering=-added&key=${process.env.API_KEY}&page_size=20`,
-    {
-      headers: {
-        Accept: 'application/json',
-      },
-    }
-  )
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  console.log('---------------------', req.query)
+  const response = await axios({
+    url: `https://api.igdb.com/v4/age_ratings`,
+    headers: {
+      Authorization: `Bearer ${req.query.bearer}`,
+      'Client-ID': '5k9et8cpgz1dtnl71tsp11tu3ikwz7',
+      'Content-Type': 'text/plain',
+      Accept: 'application/json',
+    },
+    method: 'post',
 
-  res.status(200).json(response.data.results)
+    data: 'fields category,checksum,content_descriptions,rating,rating_cover_url,synopsis;',
+  })
+  console.log(response)
+  res.status(200).json(response.data)
 }

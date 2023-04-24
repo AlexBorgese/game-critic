@@ -9,9 +9,11 @@ import LoadingSpinner from '../Spinner/Spinner'
 const GameView = ({
   onClick,
   selectedGame,
+  bearerToken,
 }: {
   onClick: () => void
   selectedGame: string
+  bearerToken: string
 }) => {
   const [showMore, setShowMore] = useState(false)
   // TODO move to redux
@@ -25,7 +27,10 @@ const GameView = ({
   useEffect(() => {
     const getGame = async () => {
       const formattedGame = selectedGame.replace(' ', '-')
-      const gamesResponse = await gameApi.getSelectedGame(formattedGame)
+      const gamesResponse = await gameApi.getSelectedGame(
+        bearerToken,
+        formattedGame
+      )
       if (gamesResponse !== undefined) {
         setGameData(gamesResponse)
       }

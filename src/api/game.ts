@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const game = {
-  getGame: async (game: string) => {
+  getGame: async (bearerToken: string, game: string) => {
     try {
       const response = await axios.get(`api/game/${game}`, {
         headers: {
@@ -15,7 +15,7 @@ const game = {
     }
   },
 
-  getSelectedGame: async (gameName: string) => {
+  getSelectedGame: async (bearerToken: string, gameName: string) => {
     try {
       const response = await axios.get(`/api/games/${gameName}`, {
         headers: {
@@ -29,9 +29,9 @@ const game = {
     }
   },
 
-  getPopular: async () => {
+  getPopular: async (bearerToken: string) => {
     try {
-      const response = await axios.get(`/api/popular`, {
+      const response = await axios.get(`/api/popular?bearer=${bearerToken}`, {
         headers: {
           Accept: 'application/json',
         },

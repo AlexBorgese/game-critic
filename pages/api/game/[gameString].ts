@@ -1,6 +1,14 @@
 import axios from 'axios'
+import type { NextApiRequest, NextApiResponse } from 'next'
 
-export default async function handler(req, res) {
+type Data = {
+  gameString: string
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) {
   const { gameString } = req.query
   const formattedGame = gameString.replace(' ', '-').replace('%20', '-')
   const response = await axios.get(
