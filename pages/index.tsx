@@ -43,7 +43,7 @@ export const Home = ({
 
     setSearchedGame(getGame)
   }
-  console.log(searchedGame?.length !== 0)
+
   return (
     <>
       <Head>

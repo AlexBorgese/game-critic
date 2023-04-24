@@ -2,6 +2,7 @@ import { videoGame } from '@/src/types/video-game'
 import React, { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
+import { Rating } from 'react-simple-star-rating'
 import gameApi from '@/src/api/game'
 import Image from 'next/image'
 import LoadingSpinner from '../Spinner/Spinner'
@@ -32,6 +33,12 @@ const GameView = ({
     }
     getGame()
   }, [])
+
+  const getScore = () => {
+    return localStorage.getItem(gameData.name) === null
+      ? 0
+      : Number(localStorage.getItem(gameData.name))
+  }
 
   return (
     <>
@@ -85,7 +92,12 @@ const GameView = ({
                     </div>
                     <div>
                       <h3>Your Rating</h3>
-                      <p>You need to Log in to rate this game</p>
+                      <Rating
+                        onClick={(rate: number) =>
+                          localStorage.setItem(gameData.name, `${rate}`)
+                        }
+                        initialValue={getScore()}
+                      />
                     </div>
                   </ScoreAndRating>
                 </TextContent>
