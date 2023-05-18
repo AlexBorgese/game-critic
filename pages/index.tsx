@@ -136,18 +136,28 @@ const Main = styled.main`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 6rem;
-`
 
-const Line = styled.span`
-  width: 100%;
-  margin: 16px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  @media (min-width: 1024px) {
+    padding: 6rem;
+  }
 `
 
 const TileWrapper = styled.div`
   overflow-y: none;
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(5, 1fr);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  justify-content: center;
+
+  a {
+    margin-bottom: 16px;
+  }
+
+  @media (min-width: 1024px) {
+    justify-content: flex-start;
+    a {
+      margin: 0 8px 8px 0;
+    }
+  }
 `

@@ -11,7 +11,7 @@ const Tile = ({
   <a onClick={onClick}>
     <GameTile>
       <TileHeader>{name}</TileHeader>
-      <Image src={background_image} alt={name} fill priority />
+      <Image src={background_image} alt={name} fill sizes="100vw" priority />
     </GameTile>
   </a>
 )

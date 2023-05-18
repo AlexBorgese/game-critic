@@ -45,23 +45,24 @@ const GameView = ({
       {createPortal(
         <>
           <Modal>
-            <Image
-              onClick={onClick}
-              src="/assets/cross.svg"
-              alt="exit"
-              height={50}
-              width={50}
-              style={{
-                color: 'black',
-                right: 0,
-                position: 'absolute',
-                margin: '24px',
-              }}
-            />
             {gameData.name === '' ? (
               <LoadingSpinner />
             ) : (
               <ModalContent>
+                <Image
+                  onClick={onClick}
+                  src="/assets/cross.svg"
+                  alt="exit"
+                  height={50}
+                  width={50}
+                  style={{
+                    color: 'black',
+                    right: 0,
+                    position: 'absolute',
+                    margin: '8px',
+                    zIndex: 2,
+                  }}
+                />
                 <ImageWrapper>
                   <Image
                     src={gameData.background_image}
@@ -123,10 +124,11 @@ const Modal = styled.div`
 `
 
 const ModalContent = styled.div`
-  background-color: #fefefe;
+  background-color: #151515;
   margin: 5% auto;
-  border: 1px solid #888;
-  width: 80%;
+  border: 1px solid #242323;
+  width: auto;
+  max-width: 1024px;
   height: 80%;
   display: flex;
   flex-direction: column;
