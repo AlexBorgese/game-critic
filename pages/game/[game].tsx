@@ -10,7 +10,7 @@ export async function getStaticPaths() {
   console.log('before call')
   let games = []
   try {
-    const res = await fetch(`http://localhost:3000/api/popular`)
+    const res = await fetch(`https://game-critic.vercel.app/api/popular`)
     games = await res.json()
     console.log('games', games)
   } catch (e) {
@@ -28,7 +28,9 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const res = await fetch(`http://localhost:3000/api/games/${params.game}`)
+  const res = await fetch(
+    `https://game-critic.vercel.app/api/games/${params.game}`
+  )
   const game = await res.json()
   const screenshotsRes = await fetch(
     `http://localhost:3000/api/game/media/${params.game}/screenshots`
