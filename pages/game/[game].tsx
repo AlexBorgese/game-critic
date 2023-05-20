@@ -6,17 +6,13 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css' // requires a loa
 import { Carousel } from 'react-responsive-carousel'
 
 export async function getStaticPaths() {
-  // Call an external API endpoint to get posts
-  console.log('before call')
   let games = []
   try {
     const res = await fetch(`https://game-critic.vercel.app/api/popular`)
     games = await res.json()
-    console.log('games', games)
   } catch (e) {
     console.log('error', e)
   }
-  console.log('games')
   const paths = games.map((game: videoGame) => {
     return {
       params: { game: game.slug },
@@ -39,8 +35,6 @@ export async function getStaticProps({ params }) {
 
   return {
     props: { game: { ...game, screenshots } },
-    // Re-generate the post at most once per second
-    // if a request comes in
     revalidate: 1,
   }
 }
@@ -70,7 +64,7 @@ export default function game({ game }: { game: videoGame }) {
             showIndicators={false}
             showStatus={false}
           >
-            {game.screenshots?.map((screenshot) => (
+            {game?.screenshots?.map((screenshot) => (
               <img src={screenshot.image} />
             ))}
           </Carousel>
