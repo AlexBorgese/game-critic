@@ -28,13 +28,13 @@ export async function getStaticProps({ params }) {
     `https://game-critic.vercel.app/api/games/${params.game}`
   )
   const game = await res.json()
-  const screenshotsRes = await fetch(
-    `http://localhost:3000/api/game/media/${params.game}/screenshots`
-  )
-  const screenshots = await screenshotsRes.json()
+  // const screenshotsRes = await fetch(
+  //   `https://game-critic.vercel.app/api/game/media/${params.game}/screenshots`
+  // )
+  // const screenshots = await screenshotsRes.json()
 
   return {
-    props: { game: { ...game, screenshots } },
+    props: { game: { ...game /*screenshots*/ } },
     revalidate: 1,
   }
 }
@@ -64,9 +64,9 @@ export default function game({ game }: { game: videoGame }) {
             showIndicators={false}
             showStatus={false}
           >
-            {game?.screenshots?.map((screenshot) => (
+            {/*{game?.screenshots?.map((screenshot) => (
               <img src={screenshot.image} />
-            ))}
+            ))}*/}
           </Carousel>
         </CarouselWrapper>
         <ScoreAndRating>
