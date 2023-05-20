@@ -72,20 +72,20 @@ export default function game({ game }: { game: videoGame }) {
         <ScoreAndRating>
           <div>
             <h3>Metacritic Score</h3>
-            {game.metacritic !== null ? game.metacritic : '-'}
+            {game?.metacritic !== null ? game?.metacritic : '-'}
             /100
           </div>
           <div>
             <h3>Your Rating</h3>
             <Rating
               onClick={(rate: number) =>
-                localStorage.setItem(game.name, `${rate}`)
+                localStorage.setItem(game?.name, `${rate}`)
               }
               initialValue={getScore()}
             />
           </div>
         </ScoreAndRating>
-        <Description>{game.description_raw}</Description>
+        <Description>{game?.description_raw}</Description>
       </Content>
     </Layout>
   )
