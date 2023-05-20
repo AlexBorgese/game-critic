@@ -3,12 +3,8 @@ import Image from 'next/image'
 import { videoGame } from '@/src/types/video-game'
 import styled from 'styled-components'
 
-const Tile = ({
-  name,
-  background_image,
-  onClick,
-}: videoGame & { onClick: () => void }) => (
-  <a onClick={onClick}>
+const Tile = ({ name, background_image, slug }: videoGame) => (
+  <a href={`/game/${slug}`}>
     <GameTile>
       <TileHeader>{name}</TileHeader>
       <Image src={background_image} alt={name} fill sizes="100vw" priority />
