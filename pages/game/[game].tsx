@@ -58,6 +58,7 @@ export default function game({ game }: { game: videoGame }) {
         <CarouselWrapper>
           <Carousel
             width="100%"
+            infiniteLoop
             dynamicHeight
             autoPlay
             interval={3000}
