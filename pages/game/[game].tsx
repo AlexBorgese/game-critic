@@ -42,9 +42,9 @@ export async function getStaticProps({ params }) {
 export default function game({ game }: { game: videoGame }) {
   const getScore = () => {
     if (typeof localStorage === 'undefined') return
-    return localStorage?.getItem(game.name) === null
+    return localStorage?.getItem(game?.name) === null
       ? 0
-      : Number(localStorage?.getItem(game.name))
+      : Number(localStorage?.getItem(game?.name))
   }
 
   return (
