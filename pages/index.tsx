@@ -7,6 +7,7 @@ import { videoGame } from '@/src/types/video-game'
 import Tile from '@/src/components/Tile/tile'
 import SearchBar from '@/src/components/SearchBar/searchBar'
 import { SET_GAMES } from '@/src/constants/gameConstants'
+import { useSession } from 'next-auth/react'
 // import LoadingSpinner from '@/src/components/Spinner/Spinner'
 
 export const Home = ({
@@ -18,6 +19,8 @@ export const Home = ({
   selectedGame: videoGame
 }) => {
   const [searchedGame, setSearchedGame] = useState<Array<videoGame>>([])
+  const session = useSession()
+  console.log(session)
 
   useEffect(() => {
     const getGame = async () => {
